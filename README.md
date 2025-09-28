@@ -11,7 +11,7 @@
 ## 📸 Screenshots
 ![App Interface](./screenshots/interface.png)
 ![Emotion Detection](./screenshots/emotion-detection.png)
-![A/B Testing Results](./screenshots/ab-testing.png)
+![A/B Testing Results](https://github.com/user-attachments/assets/36ea0448-71a2-42d9-a397-f76b0b93327d)
 
 
 ## 🔬 Experiment Overview
