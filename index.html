@@ -45,6 +45,7 @@
                 <span class="close">&times;</span>
                 <h3>Settings</h3>
                 <label><input type="checkbox" id="sound-toggle" checked> Enable Sound Feedback</label><br>
+                <label><input type="checkbox" id="voice-toggle"> Enable Voice Feedback</label><br>
                 <label><input type="checkbox" id="dark-mode-toggle"> Dark Mode</label><br>
                 <label><input type="checkbox" id="ab-test-toggle"> A/B Testing Mode</label>
             </div>
@@ -60,6 +61,7 @@
         </div>
         <div class="emotion-display">
             <h2>Detected Emotion: <span id="emotion">Neutral</span></h2>
+            <div id="emoji-display">😐</div>
         </div>
         <div class="ad-section">
             <h2>Personalized Ad</h2>
@@ -71,6 +73,10 @@
         </div>
         <div class="stats">
             <h3>Experiment Stats</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+                <span class="progress-text">Experiment Progress: 0%</span>
+            </div>
             <p>Total Views: <span id="views">0</span></p>
             <p>Clicks: <span id="clicks">0</span></p>
             <p>Click Rate: <span id="rate">0%</span></p>

@@ -13,12 +13,25 @@ let clicks = 0;
 let emotionCounts = { happy: 0, sad: 0, angry: 0, neutral: 0 };
 let lastEmotion = 'neutral';
 let soundEnabled = true;
+let voiceEnabled = false;
 let chart;
 let detectionInterval;
 let isDetecting = true;
 let abTestingEnabled = false;
 let moodViews = 0, moodClicks = 0, randomViews = 0, randomClicks = 0;
 let mockMode = false; // Set to true for demo if AI models fail
+
+// Emotion smoothing variables
+let emotionHistory = [];
+let confidenceThreshold = 0.3; // Minimum confidence to change emotion
+let smoothingFrames = 3; // Number of frames to average
+
+const emotionEmojis = {
+    happy: '😊',
+    sad: '😢',
+    angry: '😠',
+    neutral: '😐'
+};
 
 // Ad data based on emotions
 const ads = {
@@ -73,26 +86,42 @@ async function detectEmotions() {
     if (mockMode) {
         // Mock emotion detection for demo
         const emotions = Object.keys(ads);
-        dominantEmotion = emotions[Math.floor(Math.random() * emotions.length)];
-        // Simulate face detection by checking if video is playing
-        if (video.srcObject) {
-            // Mock detection - change emotion occasionally
-            if (Math.random() < 0.3) { // 30% chance to change emotion
-                dominantEmotion = emotions[Math.floor(Math.random() * emotions.length)];
-            }
+        const rand = Math.random();
+
+        // Simulate realistic detection patterns
+        if (rand < 0.2) {
+            // 20% chance of neutral (simulating no face or unclear detection)
+            dominantEmotion = 'neutral';
+        } else if (rand < 0.4) {
+            // 20% chance to change to a random emotion
+            dominantEmotion = emotions[Math.floor(Math.random() * emotions.length)];
+        } else {
+            // 60% chance to maintain current emotion or cycle through emotions
+            const currentIndex = emotions.indexOf(lastEmotion || 'neutral');
+            const nextIndex = (currentIndex + 1) % emotions.length;
+            dominantEmotion = emotions[nextIndex];
         }
     } else {
         const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
 
         if (detections.length > 0) {
             const expressions = detections[0].expressions;
-            dominantEmotion = Object.keys(expressions).reduce((a, b) => expressions[a] > expressions[b] ? a : b);
+            const rawEmotion = Object.keys(expressions).reduce((a, b) => expressions[a] > expressions[b] ? a : b);
+            dominantEmotion = smoothEmotion(rawEmotion, expressions);
         } else {
-            return; // No face detected
+            // No face detected - use neutral
+            dominantEmotion = 'neutral';
         }
     }
 
     emotionSpan.textContent = dominantEmotion.charAt(0).toUpperCase() + dominantEmotion.slice(1);
+    emojiDisplay.textContent = emotionEmojis[dominantEmotion] || '😐';
+    emojiDisplay.style.animation = 'none';
+    setTimeout(() => emojiDisplay.style.animation = 'bounce 1s ease-in-out', 10);
+
+    if (voiceEnabled && dominantEmotion !== lastEmotion) {
+        speakEmotion(dominantEmotion);
+    }
 
     let adEmotion = dominantEmotion;
     if (abTestingEnabled && Math.random() < 0.5) {
@@ -142,12 +171,28 @@ clickBtn.addEventListener('click', () => {
     alert('Ad clicked! Thanks for participating in the experiment.');
 });
 
+// Speak emotion using Web Speech API
+function speakEmotion(emotion) {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(`Detected ${emotion} emotion`);
+        utterance.rate = 1.2;
+        utterance.pitch = 1;
+        utterance.volume = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+}
+
 // Update stats
 function updateStats() {
     viewsSpan.textContent = views;
     clicksSpan.textContent = clicks;
     const rate = views > 0 ? ((clicks / views) * 100).toFixed(1) : 0;
     rateSpan.textContent = rate + '%';
+
+    // Update progress bar (assuming 100 views = 100% complete)
+    const progress = Math.min((views / 100) * 100, 100);
+    progressFill.style.width = progress + '%';
+    progressText.textContent = `Experiment Progress: ${progress.toFixed(0)}%`;
 
     if (abTestingEnabled) {
         moodViewsSpan.textContent = moodViews;
@@ -194,6 +239,48 @@ function updateChart() {
     }
 }
 
+// Smooth emotion detection to reduce false positives
+function smoothEmotion(currentEmotion, expressions) {
+    // Add current detection to history
+    emotionHistory.push({
+        emotion: currentEmotion,
+        confidence: expressions[currentEmotion],
+        timestamp: Date.now()
+    });
+
+    // Keep only recent detections
+    if (emotionHistory.length > smoothingFrames) {
+        emotionHistory.shift();
+    }
+
+    // Count occurrences of each emotion in recent history
+    const emotionCount = {};
+    emotionHistory.forEach(detection => {
+        emotionCount[detection.emotion] = (emotionCount[detection.emotion] || 0) + 1;
+    });
+
+    // Find most common emotion in recent history
+    let smoothedEmotion = currentEmotion;
+    let maxCount = 0;
+    for (const [emotion, count] of Object.entries(emotionCount)) {
+        if (count > maxCount) {
+            maxCount = count;
+            smoothedEmotion = emotion;
+        }
+    }
+
+    // Only change if confidence is high enough and emotion is consistent
+    const currentConfidence = expressions[currentEmotion];
+    const consistencyRatio = maxCount / emotionHistory.length;
+
+    if (currentConfidence > confidenceThreshold && consistencyRatio > 0.6) {
+        return smoothedEmotion;
+    } else {
+        // Stick with previous emotion if confidence is low
+        return lastEmotion;
+    }
+}
+
 // Play sound for emotion change
 function playEmotionSound(emotion) {
     if (soundEnabled && emotion !== lastEmotion) {
@@ -225,6 +312,7 @@ const instructionsModal = document.getElementById('instructions-modal');
 const closeBtn = document.querySelector('.close');
 const closeInstructionsBtn = document.querySelector('.close-instructions');
 const soundToggle = document.getElementById('sound-toggle');
+const voiceToggle = document.getElementById('voice-toggle');
 const darkModeToggle = document.getElementById('dark-mode-toggle');
 const abTestToggle = document.getElementById('ab-test-toggle');
 const exportBtn = document.getElementById('export-btn');
@@ -232,6 +320,9 @@ const pauseBtn = document.getElementById('pause-btn');
 const resumeBtn = document.getElementById('resume-btn');
 const loadingScreen = document.getElementById('loading-screen');
 const abStats = document.getElementById('ab-stats');
+const emojiDisplay = document.getElementById('emoji-display');
+const progressFill = document.getElementById('progress-fill');
+const progressText = document.querySelector('.progress-text');
 const moodViewsSpan = document.getElementById('mood-views');
 const moodClicksSpan = document.getElementById('mood-clicks');
 const moodRateSpan = document.getElementById('mood-rate');
@@ -256,6 +347,11 @@ darkModeToggle.addEventListener('change', () => {
 // Sound toggle
 soundToggle.addEventListener('change', () => {
     soundEnabled = soundToggle.checked;
+});
+
+// Voice toggle
+voiceToggle.addEventListener('change', () => {
+    voiceEnabled = voiceToggle.checked;
 });
 
 // A/B testing toggle
@@ -316,7 +412,7 @@ async function init() {
     try {
         await Promise.race([
             loadModels(),
-            new Promise((_, reject) => setTimeout(() => reject(new Error('Model loading timeout')), 30000))
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Model loading timeout')), 15000))
         ]);
         await startVideo();
         loadingScreen.style.display = 'none';

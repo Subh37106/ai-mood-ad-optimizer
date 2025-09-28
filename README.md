@@ -1,52 +1,66 @@
-# AI Mood-Based Ad Optimizer
+# 🎯 AI Mood-Based Ad Optimizer
 
-## Hypothesis
-People click ads 50% more when they match the viewer's real-time emotional state (detected via facial expressions).
+![Demo Screenshot](./demo-screenshot.png)
+*Take a screenshot of your app in action and replace this placeholder*
 
-## Experiment Overview
+## 🎭 Hypothesis
+**People click ads 50% more when they match the viewer's real-time emotional state.** 🤔
+
+*Test the power of emotional AI in advertising!* 🚀
+
+## 📸 Screenshots
+![App Interface](./screenshots/interface.png)
+![Emotion Detection](./screenshots/emotion-detection.png)
+![A/B Testing Results](./screenshots/ab-testing.png)
+
+*Take screenshots of your app and add them to a `screenshots/` folder*
+
+## 🔬 Experiment Overview
 This web application uses AI-powered facial emotion detection to dynamically change ad content based on the user's detected mood. The goal is to test whether personalized, emotion-matched ads improve click-through rates compared to static ads.
 
-### Key Features
-- Real-time webcam emotion detection using face-api.js (falls back to demo mode with simulated emotions if models fail to load)
-- Dynamic ad content swapping (image and text) based on detected emotions: Happy, Sad, Angry, Neutral
-- Click tracking and statistics display with interactive chart
-- Sound feedback for emotion changes
-- Smooth animations for ad transitions
-- Settings panel with dark mode, sound toggle, and A/B testing mode
-- Instructions modal for user guidance
-- Loading screen during model initialization
-- Webcam controls (pause/resume detection)
-- A/B testing: Compare mood-based vs. random ad serving with separate stats
-- Export experiment data to JSON (includes A/B results if enabled)
-- Responsive, user-friendly interface
+### ✨ Key Features
+- 🎥 Real-time webcam emotion detection using face-api.js (falls back to demo mode with simulated emotions if models fail to load)
+- 🎨 Dynamic ad content swapping (image and text) based on detected emotions: 😊 Happy, 😢 Sad, 😠 Angry, 😐 Neutral
+- 📊 Click tracking and statistics display with interactive chart and progress bar
+- 🔊 Sound feedback for emotion changes + 🗣️ voice announcements
+- 😄 Emoji reactions that animate with each emotion change
+- 🎭 Smooth 3D animations and transitions throughout the interface
+- ⚙️ Settings panel with 🌙 dark mode, 🔊 sound toggle, 🗣️ voice toggle, and 🆚 A/B testing mode
+- 📖 Instructions modal for user guidance
+- ⏳ Loading screen during model initialization
+- 🎬 Webcam controls (pause/resume detection)
+- 🆚 A/B testing: Compare mood-based vs. random ad serving with separate stats
+- 💾 Export experiment data to JSON (includes A/B results if enabled)
+- 🌟 Extraordinary UI with gradients, 3D effects, floating backgrounds, and glows
+- 📱 Responsive, user-friendly interface with advanced interactions
 
-## Technologies Used
-- **Frontend**: HTML5, CSS3, JavaScript
-- **AI/ML**: face-api.js for facial expression recognition
-- **Libraries**: face-api.js (via CDN), Chart.js for data visualization
+## 🛠️ Technologies Used
+- **🎨 Frontend**: HTML5, CSS3, JavaScript
+- **🤖 AI/ML**: face-api.js for facial expression recognition
+- **📚 Libraries**: face-api.js (via CDN), Chart.js for data visualization
 
-## Setup Instructions
+## 🚀 Setup Instructions
 
-### Prerequisites
-- A modern web browser with webcam support (Chrome, Firefox, etc.)
-- Internet connection for loading face-api.js models
+### 📋 Prerequisites
+- 🌐 A modern web browser with webcam support (Chrome, Firefox, etc.)
+- 📶 Internet connection for loading face-api.js models
 
-### Installation
-1. Clone or download this repository.
-2. Open `index.html` in your web browser.
-3. Allow camera access when prompted.
+### 💻 Installation
+1. 📥 Clone or download this repository.
+2. 🌐 Open `index.html` in your web browser.
+3. 📹 Allow camera access when prompted.
 
-### Running the Experiment
-1. Launch the app in your browser.
-2. Position yourself in front of the webcam.
-3. The app will detect your facial expressions and update the ad accordingly.
-4. Click the ad button to simulate clicks and observe the statistics.
-5. Run multiple sessions with different emotions to gather data.
+### 🎮 Running the Experiment
+1. 🚀 Launch the app in your browser.
+2. 📹 Position yourself in front of the webcam.
+3. 🎭 The app will detect your facial expressions and update the ad accordingly.
+4. 👆 Click the ad button to simulate clicks and observe the statistics.
+5. 🔄 Run multiple sessions with different emotions to gather data.
 
-## How It Works
-1. **Emotion Detection**: Uses TinyFaceDetector and FaceExpressionNet from face-api.js to analyze webcam feed every 2 seconds.
-2. **Ad Personalization**: Based on the dominant detected emotion, the ad image and text change to match the mood.
-3. **Data Collection**: Tracks total ad views and clicks, calculating click-through rate in real-time.
+## 🔍 How It Works
+1. **🎭 Emotion Detection**: Uses TinyFaceDetector and FaceExpressionNet from face-api.js to analyze webcam feed every 2 seconds.
+2. **🎨 Ad Personalization**: Based on the dominant detected emotion, the ad image and text change to match the mood.
+3. **📈 Data Collection**: Tracks total ad views and clicks, calculating click-through rate in real-time.
 
 ## Experiment Results
 During testing:
@@ -81,33 +95,38 @@ After running the experiment with [X] participants over [Y] minutes:
 
 **Conclusion**: The experiment provides strong evidence that emotion-based ad targeting has significant potential, though real-world deployment would need larger-scale testing and improved detection algorithms.
 
-## Hackathon Submission
-This project is submitted for the "Code Hypothesis: A 24-Hour Hackathon for Wild Ideas".
+## 🏆 Hackathon Submission
+This project is submitted for the **"Code Hypothesis: A 24-Hour Hackathon for Wild Ideas"**. 🎉
 
-### Judging Criteria Alignment
-- **Originality & Creativity**: Novel use of AI for real-time ad personalization.
-- **Execution & Functionality**: Fully functional web app with working emotion detection.
-- **Clarity of Thought**: Clear hypothesis, implementation, and results documentation.
-- **Smart Use of AI**: Thoughtful integration of pre-trained models for emotion recognition.
-- **Beginner Spirit**: Accessible code using JavaScript and web APIs.
+### 📊 Judging Criteria Alignment
+- **🎨 Originality & Creativity**: Novel use of AI for real-time ad personalization.
+- **⚙️ Execution & Functionality**: Fully functional web app with working emotion detection.
+- **💡 Clarity of Thought**: Clear hypothesis, implementation, and results documentation.
+- **🤖 Smart Use of AI**: Thoughtful integration of pre-trained models for emotion recognition.
+- **🌱 Beginner Spirit**: Accessible code using JavaScript and web APIs.
 
-### Demo Video
+### 🎬 Demo Video
 [Link to 2-minute demo video explaining the hypothesis and showing the app in action]
 
-### Prize Targeting
-- Proven Hypothesis Award: If data proves/disproves the hypothesis clearly.
-- Wild Theory Award: For the bold idea of mood-based ads.
-- Smart Use of AI: Core AI implementation.
+### 🏅 Prize Targeting
+- 🏆 **Proven Hypothesis Award**: If data proves/disproves the hypothesis clearly.
+- 🌟 **Wild Theory Award**: For the bold idea of mood-based ads.
+- 🧠 **Smart Use of AI**: Core AI implementation.
 
-## Future Improvements
-- Integrate with real ad networks for A/B testing.
-- Add more emotions and ad categories.
-- Improve detection accuracy with custom training.
-- Backend for data storage and analysis.
+## 🚀 Future Improvements
+- 🔗 Integrate with real ad networks for A/B testing.
+- 😊 Add more emotions and ad categories.
+- 🎯 Improve detection accuracy with custom training.
+- 🗄️ Backend for data storage and analysis.
 
-## License
-This project is open-source under the MIT License.
+## 📄 License
+This project is open-source under the MIT License. 📜
 
-## Acknowledgments
-- face-api.js library for emotion detection
-- Devpost for the hackathon platform
+## 📚 Documentation
+- 📖 **[API Reference](./API.md)**: Complete JavaScript API documentation
+- 🤝 **[Contributing Guide](./CONTRIBUTING.md)**: How to contribute to the project
+
+## 🙏 Acknowledgments
+- 🤖 face-api.js library for emotion detection
+- 🏗️ Devpost for the hackathon platform
+- 🎨 Chart.js for data visualization
