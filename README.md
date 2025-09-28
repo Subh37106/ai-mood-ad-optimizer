@@ -7,7 +7,7 @@ People click ads 50% more when they match the viewer's real-time emotional state
 This web application uses AI-powered facial emotion detection to dynamically change ad content based on the user's detected mood. The goal is to test whether personalized, emotion-matched ads improve click-through rates compared to static ads.
 
 ### Key Features
-- Real-time webcam emotion detection using face-api.js
+- Real-time webcam emotion detection using face-api.js (falls back to demo mode with simulated emotions if models fail to load)
 - Dynamic ad content swapping (image and text) based on detected emotions: Happy, Sad, Angry, Neutral
 - Click tracking and statistics display with interactive chart
 - Sound feedback for emotion changes

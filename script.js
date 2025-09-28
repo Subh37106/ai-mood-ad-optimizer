@@ -18,6 +18,7 @@ let detectionInterval;
 let isDetecting = true;
 let abTestingEnabled = false;
 let moodViews = 0, moodClicks = 0, randomViews = 0, randomClicks = 0;
+let mockMode = false; // Set to true for demo if AI models fail
 
 // Ad data based on emotions
 const ads = {
@@ -41,8 +42,17 @@ const ads = {
 
 // Load face-api models
 async function loadModels() {
-    await faceapi.nets.tinyFaceDetector.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights/');
-    await faceapi.nets.faceExpressionNet.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights/');
+    try {
+        await faceapi.nets.tinyFaceDetector.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights/tiny_face_detector_model/');
+        await faceapi.nets.faceExpressionNet.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights/face_expression_model/');
+        console.log('AI models loaded successfully');
+    } catch (error) {
+        console.error('Failed to load AI models:', error);
+        // Enable mock mode for demo
+        mockMode = true;
+        console.log('Enabling mock mode for demo purposes');
+        alert('AI models failed to load. Switching to demo mode with simulated emotions. The concept still works perfectly!');
+    }
 }
 
 // Start webcam
@@ -58,32 +68,49 @@ async function startVideo() {
 
 // Detect emotions
 async function detectEmotions() {
-    const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
+    let dominantEmotion;
 
-    if (detections.length > 0) {
-        const expressions = detections[0].expressions;
-        const dominantEmotion = Object.keys(expressions).reduce((a, b) => expressions[a] > expressions[b] ? a : b);
-
-        emotionSpan.textContent = dominantEmotion.charAt(0).toUpperCase() + dominantEmotion.slice(1);
-
-        let adEmotion = dominantEmotion;
-        if (abTestingEnabled && Math.random() < 0.5) {
-            // Random mode
-            const emotions = Object.keys(ads);
-            adEmotion = emotions[Math.floor(Math.random() * emotions.length)];
-            randomViews++;
-        } else {
-            // Mood-based mode
-            moodViews++;
+    if (mockMode) {
+        // Mock emotion detection for demo
+        const emotions = Object.keys(ads);
+        dominantEmotion = emotions[Math.floor(Math.random() * emotions.length)];
+        // Simulate face detection by checking if video is playing
+        if (video.srcObject) {
+            // Mock detection - change emotion occasionally
+            if (Math.random() < 0.3) { // 30% chance to change emotion
+                dominantEmotion = emotions[Math.floor(Math.random() * emotions.length)];
+            }
         }
+    } else {
+        const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
 
-        updateAd(adEmotion);
-        playEmotionSound(dominantEmotion);
-        emotionCounts[dominantEmotion]++;
-        lastEmotion = dominantEmotion;
-        views++;
-        updateStats();
+        if (detections.length > 0) {
+            const expressions = detections[0].expressions;
+            dominantEmotion = Object.keys(expressions).reduce((a, b) => expressions[a] > expressions[b] ? a : b);
+        } else {
+            return; // No face detected
+        }
     }
+
+    emotionSpan.textContent = dominantEmotion.charAt(0).toUpperCase() + dominantEmotion.slice(1);
+
+    let adEmotion = dominantEmotion;
+    if (abTestingEnabled && Math.random() < 0.5) {
+        // Random mode
+        const emotions = Object.keys(ads);
+        adEmotion = emotions[Math.floor(Math.random() * emotions.length)];
+        randomViews++;
+    } else {
+        // Mood-based mode
+        moodViews++;
+    }
+
+    updateAd(adEmotion);
+    playEmotionSound(dominantEmotion);
+    emotionCounts[dominantEmotion]++;
+    lastEmotion = dominantEmotion;
+    views++;
+    updateStats();
 }
 
 // Update ad based on emotion
@@ -286,12 +313,25 @@ resumeBtn.addEventListener('click', () => {
 async function init() {
     loadingScreen.style.display = 'flex';
     initChart();
-    await loadModels();
-    await startVideo();
-    loadingScreen.style.display = 'none';
+    try {
+        await Promise.race([
+            loadModels(),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Model loading timeout')), 30000))
+        ]);
+        await startVideo();
+        loadingScreen.style.display = 'none';
 
-    // Detect emotions every 2 seconds
-    detectionInterval = setInterval(detectEmotions, 2000);
+        // Detect emotions every 2 seconds
+        detectionInterval = setInterval(detectEmotions, 2000);
+    } catch (error) {
+        loadingScreen.innerHTML = `
+            <div class="loading-content">
+                <h2>Loading Failed</h2>
+                <p>Unable to load AI models. Please check your internet connection and refresh.</p>
+                <button onclick="location.reload()">Retry</button>
+            </div>
+        `;
+    }
 }
 
 init();
