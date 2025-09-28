@@ -1,7 +1,7 @@
 # 🎯 AI Mood-Based Ad Optimizer
 
 ![Demo Screenshot](./demo-screenshot.png)
-*Take a screenshot of your app in action and replace this placeholder*
+
 
 ## 🎭 Hypothesis
 **People click ads 50% more when they match the viewer's real-time emotional state.** 🤔
@@ -13,7 +13,6 @@
 ![Emotion Detection](./screenshots/emotion-detection.png)
 ![A/B Testing Results](./screenshots/ab-testing.png)
 
-*Take screenshots of your app and add them to a `screenshots/` folder*
 
 ## 🔬 Experiment Overview
 This web application uses AI-powered facial emotion detection to dynamically change ad content based on the user's detected mood. The goal is to test whether personalized, emotion-matched ads improve click-through rates compared to static ads.
