@@ -8,8 +8,21 @@
 </head>
 <body>
     <div class="container">
-        <h1>AI Mood-Based Ad Optimizer</h1>
-        <p>Hypothesis: People click ads 50% more when they match the viewer's real-time emotional state.</p>
+        <header>
+            <h1>AI Mood-Based Ad Optimizer</h1>
+            <p>Hypothesis: People click ads 50% more when they match the viewer's real-time emotional state.</p>
+            <button id="settings-btn">⚙️ Settings</button>
+        </header>
+
+        <div id="settings-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h3>Settings</h3>
+                <label><input type="checkbox" id="sound-toggle" checked> Enable Sound Feedback</label><br>
+                <label><input type="checkbox" id="dark-mode-toggle"> Dark Mode</label>
+            </div>
+        </div>
+
         <div class="webcam-section">
             <video id="video" autoplay muted></video>
             <canvas id="canvas"></canvas>
@@ -19,8 +32,8 @@
         </div>
         <div class="ad-section">
             <h2>Personalized Ad</h2>
-            <div id="ad-content">
-                <img id="ad-image" src="ads/neutral.jpg" alt="Ad">
+            <div id="ad-content" class="ad-animate">
+                <img id="ad-image" src="https://via.placeholder.com/200x100/808080/FFFFFF?text=Neutral+Ad" alt="Ad">
                 <p id="ad-text">Default ad content.</p>
                 <button id="click-btn">Click Ad</button>
             </div>
@@ -30,9 +43,11 @@
             <p>Total Views: <span id="views">0</span></p>
             <p>Clicks: <span id="clicks">0</span></p>
             <p>Click Rate: <span id="rate">0%</span></p>
+            <canvas id="stats-chart"></canvas>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

@@ -9,13 +9,16 @@ This web application uses AI-powered facial emotion detection to dynamically cha
 ### Key Features
 - Real-time webcam emotion detection using face-api.js
 - Dynamic ad content swapping (image and text) based on detected emotions: Happy, Sad, Angry, Neutral
-- Click tracking and statistics display
+- Click tracking and statistics display with interactive chart
+- Sound feedback for emotion changes
+- Smooth animations for ad transitions
+- Settings panel with dark mode and sound toggle
 - Responsive, user-friendly interface
 
 ## Technologies Used
 - **Frontend**: HTML5, CSS3, JavaScript
 - **AI/ML**: face-api.js for facial expression recognition
-- **Libraries**: face-api.js (via CDN)
+- **Libraries**: face-api.js (via CDN), Chart.js for data visualization
 
 ## Setup Instructions
 

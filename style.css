@@ -4,6 +4,12 @@ body {
     margin: 0;
     padding: 20px;
     color: #333;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark-mode {
+    background-color: #333;
+    color: #f4f4f4;
 }
 
 .container {
@@ -13,11 +19,69 @@ body {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    transition: background 0.3s;
+}
+
+body.dark-mode .container {
+    background: #444;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 h1 {
     text-align: center;
     color: #007bff;
+    margin: 0;
+}
+
+#settings-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#settings-btn:hover {
+    background: #0056b3;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 400px;
+    border-radius: 8px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: black;
 }
 
 .webcam-section {
@@ -38,6 +102,7 @@ h1 {
 
 .emotion-display h2 {
     color: #28a745;
+    transition: color 0.3s;
 }
 
 .ad-section {
@@ -50,11 +115,23 @@ h1 {
     padding: 20px;
     border-radius: 8px;
     background: #fff3cd;
+    transition: all 0.5s ease;
+}
+
+.ad-animate {
+    animation: adChange 0.5s ease;
+}
+
+@keyframes adChange {
+    0% { transform: scale(0.9); opacity: 0.7; }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
 }
 
 #ad-image {
     max-width: 200px;
     height: auto;
+    transition: opacity 0.3s;
 }
 
 #click-btn {
@@ -65,6 +142,7 @@ h1 {
     border-radius: 5px;
     cursor: pointer;
     margin-top: 10px;
+    transition: background 0.3s;
 }
 
 #click-btn:hover {
@@ -78,4 +156,9 @@ h1 {
 
 .stats h3 {
     color: #dc3545;
+}
+
+#stats-chart {
+    max-width: 100%;
+    height: 200px;
 }

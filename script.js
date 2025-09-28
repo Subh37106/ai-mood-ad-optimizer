@@ -10,6 +10,10 @@ const rateSpan = document.getElementById('rate');
 
 let views = 0;
 let clicks = 0;
+let emotionCounts = { happy: 0, sad: 0, angry: 0, neutral: 0 };
+let lastEmotion = 'neutral';
+let soundEnabled = true;
+let chart;
 
 // Ad data based on emotions
 const ads = {
@@ -51,13 +55,16 @@ async function startVideo() {
 // Detect emotions
 async function detectEmotions() {
     const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
-    
+
     if (detections.length > 0) {
         const expressions = detections[0].expressions;
         const dominantEmotion = Object.keys(expressions).reduce((a, b) => expressions[a] > expressions[b] ? a : b);
-        
+
         emotionSpan.textContent = dominantEmotion.charAt(0).toUpperCase() + dominantEmotion.slice(1);
         updateAd(dominantEmotion);
+        playEmotionSound(dominantEmotion);
+        emotionCounts[dominantEmotion]++;
+        lastEmotion = dominantEmotion;
         views++;
         updateStats();
     }
@@ -68,6 +75,10 @@ function updateAd(emotion) {
     const ad = ads[emotion] || ads.neutral;
     adImage.src = ad.image;
     adText.textContent = ad.text;
+    const adContent = document.getElementById('ad-content');
+    adContent.classList.remove('ad-animate');
+    void adContent.offsetWidth; // Trigger reflow
+    adContent.classList.add('ad-animate');
 }
 
 // Handle ad click
@@ -83,13 +94,91 @@ function updateStats() {
     clicksSpan.textContent = clicks;
     const rate = views > 0 ? ((clicks / views) * 100).toFixed(1) : 0;
     rateSpan.textContent = rate + '%';
+    updateChart();
 }
+
+// Initialize chart
+function initChart() {
+    const ctx = document.getElementById('stats-chart').getContext('2d');
+    chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Happy', 'Sad', 'Angry', 'Neutral'],
+            datasets: [{
+                label: 'Emotion Detections',
+                data: [0, 0, 0, 0],
+                backgroundColor: ['#FFD700', '#4169E1', '#FF0000', '#808080'],
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+}
+
+// Update chart
+function updateChart() {
+    if (chart) {
+        chart.data.datasets[0].data = Object.values(emotionCounts);
+        chart.update();
+    }
+}
+
+// Play sound for emotion change
+function playEmotionSound(emotion) {
+    if (soundEnabled && emotion !== lastEmotion) {
+        // Simple beep sound using Web Audio API
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+
+        const frequencies = { happy: 800, sad: 400, angry: 200, neutral: 600 };
+        oscillator.frequency.setValueAtTime(frequencies[emotion] || 600, audioContext.currentTime);
+        oscillator.type = 'sine';
+
+        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.5);
+    }
+}
+
+// Settings modal
+const settingsBtn = document.getElementById('settings-btn');
+const modal = document.getElementById('settings-modal');
+const closeBtn = document.querySelector('.close');
+const soundToggle = document.getElementById('sound-toggle');
+const darkModeToggle = document.getElementById('dark-mode-toggle');
+
+settingsBtn.onclick = () => modal.style.display = 'block';
+closeBtn.onclick = () => modal.style.display = 'none';
+window.onclick = (event) => {
+    if (event.target == modal) modal.style.display = 'none';
+};
+
+// Dark mode toggle
+darkModeToggle.addEventListener('change', () => {
+    document.body.classList.toggle('dark-mode');
+});
+
+// Sound toggle
+soundToggle.addEventListener('change', () => {
+    soundEnabled = soundToggle.checked;
+});
 
 // Initialize
 async function init() {
+    initChart();
     await loadModels();
     await startVideo();
-    
+
     // Detect emotions every 2 seconds
     setInterval(detectEmotions, 2000);
 }
