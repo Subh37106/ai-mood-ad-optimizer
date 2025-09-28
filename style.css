@@ -1,0 +1,81 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #007bff;
+}
+
+.webcam-section {
+    text-align: center;
+    margin: 20px 0;
+}
+
+#video, #canvas {
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    max-width: 100%;
+}
+
+.emotion-display {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.emotion-display h2 {
+    color: #28a745;
+}
+
+.ad-section {
+    text-align: center;
+    margin: 20px 0;
+}
+
+#ad-content {
+    border: 2px solid #ffc107;
+    padding: 20px;
+    border-radius: 8px;
+    background: #fff3cd;
+}
+
+#ad-image {
+    max-width: 200px;
+    height: auto;
+}
+
+#click-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#click-btn:hover {
+    background: #0056b3;
+}
+
+.stats {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.stats h3 {
+    color: #dc3545;
+}

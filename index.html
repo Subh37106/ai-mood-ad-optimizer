@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Mood-Based Ad Optimizer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>AI Mood-Based Ad Optimizer</h1>
+        <p>Hypothesis: People click ads 50% more when they match the viewer's real-time emotional state.</p>
+        <div class="webcam-section">
+            <video id="video" autoplay muted></video>
+            <canvas id="canvas"></canvas>
+        </div>
+        <div class="emotion-display">
+            <h2>Detected Emotion: <span id="emotion">Neutral</span></h2>
+        </div>
+        <div class="ad-section">
+            <h2>Personalized Ad</h2>
+            <div id="ad-content">
+                <img id="ad-image" src="ads/neutral.jpg" alt="Ad">
+                <p id="ad-text">Default ad content.</p>
+                <button id="click-btn">Click Ad</button>
+            </div>
+        </div>
+        <div class="stats">
+            <h3>Experiment Stats</h3>
+            <p>Total Views: <span id="views">0</span></p>
+            <p>Clicks: <span id="clicks">0</span></p>
+            <p>Click Rate: <span id="rate">0%</span></p>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
