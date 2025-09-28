@@ -14,6 +14,8 @@ let emotionCounts = { happy: 0, sad: 0, angry: 0, neutral: 0 };
 let lastEmotion = 'neutral';
 let soundEnabled = true;
 let chart;
+let detectionInterval;
+let isDetecting = true;
 
 // Ad data based on emotions
 const ads = {
@@ -150,17 +152,27 @@ function playEmotionSound(emotion) {
     }
 }
 
-// Settings modal
+// UI elements
 const settingsBtn = document.getElementById('settings-btn');
+const instructionsBtn = document.getElementById('instructions-btn');
 const modal = document.getElementById('settings-modal');
+const instructionsModal = document.getElementById('instructions-modal');
 const closeBtn = document.querySelector('.close');
+const closeInstructionsBtn = document.querySelector('.close-instructions');
 const soundToggle = document.getElementById('sound-toggle');
 const darkModeToggle = document.getElementById('dark-mode-toggle');
+const exportBtn = document.getElementById('export-btn');
+const pauseBtn = document.getElementById('pause-btn');
+const resumeBtn = document.getElementById('resume-btn');
+const loadingScreen = document.getElementById('loading-screen');
 
 settingsBtn.onclick = () => modal.style.display = 'block';
+instructionsBtn.onclick = () => instructionsModal.style.display = 'block';
 closeBtn.onclick = () => modal.style.display = 'none';
+closeInstructionsBtn.onclick = () => instructionsModal.style.display = 'none';
 window.onclick = (event) => {
     if (event.target == modal) modal.style.display = 'none';
+    if (event.target == instructionsModal) instructionsModal.style.display = 'none';
 };
 
 // Dark mode toggle
@@ -173,14 +185,49 @@ soundToggle.addEventListener('change', () => {
     soundEnabled = soundToggle.checked;
 });
 
+// Export data
+exportBtn.addEventListener('click', () => {
+    const data = {
+        timestamp: new Date().toISOString(),
+        totalViews: views,
+        totalClicks: clicks,
+        clickRate: views > 0 ? ((clicks / views) * 100).toFixed(1) + '%' : '0%',
+        emotionCounts: emotionCounts
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'experiment-data.json';
+    a.click();
+    URL.revokeObjectURL(url);
+});
+
+// Webcam controls
+pauseBtn.addEventListener('click', () => {
+    clearInterval(detectionInterval);
+    isDetecting = false;
+    pauseBtn.style.display = 'none';
+    resumeBtn.style.display = 'inline-block';
+});
+
+resumeBtn.addEventListener('click', () => {
+    detectionInterval = setInterval(detectEmotions, 2000);
+    isDetecting = true;
+    pauseBtn.style.display = 'inline-block';
+    resumeBtn.style.display = 'none';
+});
+
 // Initialize
 async function init() {
+    loadingScreen.style.display = 'flex';
     initChart();
     await loadModels();
     await startVideo();
+    loadingScreen.style.display = 'none';
 
     // Detect emotions every 2 seconds
-    setInterval(detectEmotions, 2000);
+    detectionInterval = setInterval(detectEmotions, 2000);
 }
 
 init();

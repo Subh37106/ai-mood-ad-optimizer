@@ -32,6 +32,11 @@ header {
     align-items: center;
 }
 
+.header-buttons {
+    display: flex;
+    gap: 10px;
+}
+
 h1 {
     text-align: center;
     color: #007bff;
@@ -161,4 +166,70 @@ h1 {
 #stats-chart {
     max-width: 100%;
     height: 200px;
+}
+
+#export-btn {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+#export-btn:hover {
+    background: #218838;
+}
+
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.loading-content {
+    text-align: center;
+    color: white;
+}
+
+.spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #007bff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.webcam-controls {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.webcam-controls button {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0 5px;
+}
+
+.webcam-controls button:hover {
+    background: #5a6268;
 }

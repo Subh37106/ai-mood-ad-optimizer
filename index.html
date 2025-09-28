@@ -11,8 +11,34 @@
         <header>
             <h1>AI Mood-Based Ad Optimizer</h1>
             <p>Hypothesis: People click ads 50% more when they match the viewer's real-time emotional state.</p>
-            <button id="settings-btn">⚙️ Settings</button>
+            <div class="header-buttons">
+                <button id="instructions-btn">❓ Instructions</button>
+                <button id="settings-btn">⚙️ Settings</button>
+            </div>
         </header>
+
+        <div id="loading-screen">
+            <div class="loading-content">
+                <h2>Loading AI Models...</h2>
+                <div class="spinner"></div>
+                <p>Please wait while we load the emotion detection models.</p>
+            </div>
+        </div>
+
+        <div id="instructions-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-instructions">&times;</span>
+                <h3>How to Use</h3>
+                <ol>
+                    <li>Allow camera access when prompted.</li>
+                    <li>Position your face in front of the webcam.</li>
+                    <li>Watch as ads change based on your detected emotions.</li>
+                    <li>Click ads to simulate user interaction.</li>
+                    <li>View stats and export data at the end.</li>
+                </ol>
+                <p><strong>Hypothesis:</strong> Mood-matched ads boost click rates by 50%.</p>
+            </div>
+        </div>
 
         <div id="settings-modal" class="modal">
             <div class="modal-content">
@@ -26,6 +52,10 @@
         <div class="webcam-section">
             <video id="video" autoplay muted></video>
             <canvas id="canvas"></canvas>
+            <div class="webcam-controls">
+                <button id="pause-btn">⏸️ Pause Detection</button>
+                <button id="resume-btn" style="display:none;">▶️ Resume Detection</button>
+            </div>
         </div>
         <div class="emotion-display">
             <h2>Detected Emotion: <span id="emotion">Neutral</span></h2>
@@ -43,6 +73,7 @@
             <p>Total Views: <span id="views">0</span></p>
             <p>Clicks: <span id="clicks">0</span></p>
             <p>Click Rate: <span id="rate">0%</span></p>
+            <button id="export-btn">Export Data</button>
             <canvas id="stats-chart"></canvas>
         </div>
     </div>

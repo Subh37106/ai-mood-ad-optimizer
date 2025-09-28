@@ -13,6 +13,10 @@ This web application uses AI-powered facial emotion detection to dynamically cha
 - Sound feedback for emotion changes
 - Smooth animations for ad transitions
 - Settings panel with dark mode and sound toggle
+- Instructions modal for user guidance
+- Loading screen during model initialization
+- Webcam controls (pause/resume detection)
+- Export experiment data to JSON
 - Responsive, user-friendly interface
 
 ## Technologies Used
