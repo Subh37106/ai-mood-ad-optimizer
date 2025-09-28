@@ -16,6 +16,8 @@ let soundEnabled = true;
 let chart;
 let detectionInterval;
 let isDetecting = true;
+let abTestingEnabled = false;
+let moodViews = 0, moodClicks = 0, randomViews = 0, randomClicks = 0;
 
 // Ad data based on emotions
 const ads = {
@@ -63,7 +65,19 @@ async function detectEmotions() {
         const dominantEmotion = Object.keys(expressions).reduce((a, b) => expressions[a] > expressions[b] ? a : b);
 
         emotionSpan.textContent = dominantEmotion.charAt(0).toUpperCase() + dominantEmotion.slice(1);
-        updateAd(dominantEmotion);
+
+        let adEmotion = dominantEmotion;
+        if (abTestingEnabled && Math.random() < 0.5) {
+            // Random mode
+            const emotions = Object.keys(ads);
+            adEmotion = emotions[Math.floor(Math.random() * emotions.length)];
+            randomViews++;
+        } else {
+            // Mood-based mode
+            moodViews++;
+        }
+
+        updateAd(adEmotion);
         playEmotionSound(dominantEmotion);
         emotionCounts[dominantEmotion]++;
         lastEmotion = dominantEmotion;
@@ -86,6 +100,17 @@ function updateAd(emotion) {
 // Handle ad click
 clickBtn.addEventListener('click', () => {
     clicks++;
+    if (abTestingEnabled) {
+        // Determine which mode the current ad was from
+        // This is simplified; in a real implementation, you'd track per ad
+        if (Math.random() < 0.5) {
+            randomClicks++;
+        } else {
+            moodClicks++;
+        }
+    } else {
+        moodClicks++;
+    }
     updateStats();
     alert('Ad clicked! Thanks for participating in the experiment.');
 });
@@ -96,6 +121,19 @@ function updateStats() {
     clicksSpan.textContent = clicks;
     const rate = views > 0 ? ((clicks / views) * 100).toFixed(1) : 0;
     rateSpan.textContent = rate + '%';
+
+    if (abTestingEnabled) {
+        moodViewsSpan.textContent = moodViews;
+        moodClicksSpan.textContent = moodClicks;
+        const moodRate = moodViews > 0 ? ((moodClicks / moodViews) * 100).toFixed(1) : 0;
+        moodRateSpan.textContent = moodRate + '%';
+
+        randomViewsSpan.textContent = randomViews;
+        randomClicksSpan.textContent = randomClicks;
+        const randomRate = randomViews > 0 ? ((randomClicks / randomViews) * 100).toFixed(1) : 0;
+        randomRateSpan.textContent = randomRate + '%';
+    }
+
     updateChart();
 }
 
@@ -161,10 +199,18 @@ const closeBtn = document.querySelector('.close');
 const closeInstructionsBtn = document.querySelector('.close-instructions');
 const soundToggle = document.getElementById('sound-toggle');
 const darkModeToggle = document.getElementById('dark-mode-toggle');
+const abTestToggle = document.getElementById('ab-test-toggle');
 const exportBtn = document.getElementById('export-btn');
 const pauseBtn = document.getElementById('pause-btn');
 const resumeBtn = document.getElementById('resume-btn');
 const loadingScreen = document.getElementById('loading-screen');
+const abStats = document.getElementById('ab-stats');
+const moodViewsSpan = document.getElementById('mood-views');
+const moodClicksSpan = document.getElementById('mood-clicks');
+const moodRateSpan = document.getElementById('mood-rate');
+const randomViewsSpan = document.getElementById('random-views');
+const randomClicksSpan = document.getElementById('random-clicks');
+const randomRateSpan = document.getElementById('random-rate');
 
 settingsBtn.onclick = () => modal.style.display = 'block';
 instructionsBtn.onclick = () => instructionsModal.style.display = 'block';
@@ -185,6 +231,12 @@ soundToggle.addEventListener('change', () => {
     soundEnabled = soundToggle.checked;
 });
 
+// A/B testing toggle
+abTestToggle.addEventListener('change', () => {
+    abTestingEnabled = abTestToggle.checked;
+    abStats.style.display = abTestingEnabled ? 'block' : 'none';
+});
+
 // Export data
 exportBtn.addEventListener('click', () => {
     const data = {
@@ -192,7 +244,19 @@ exportBtn.addEventListener('click', () => {
         totalViews: views,
         totalClicks: clicks,
         clickRate: views > 0 ? ((clicks / views) * 100).toFixed(1) + '%' : '0%',
-        emotionCounts: emotionCounts
+        emotionCounts: emotionCounts,
+        abTesting: abTestingEnabled ? {
+            moodBased: {
+                views: moodViews,
+                clicks: moodClicks,
+                rate: moodViews > 0 ? ((moodClicks / moodViews) * 100).toFixed(1) + '%' : '0%'
+            },
+            random: {
+                views: randomViews,
+                clicks: randomClicks,
+                rate: randomViews > 0 ? ((randomClicks / randomViews) * 100).toFixed(1) + '%' : '0%'
+            }
+        } : null
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);

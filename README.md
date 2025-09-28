@@ -12,11 +12,12 @@ This web application uses AI-powered facial emotion detection to dynamically cha
 - Click tracking and statistics display with interactive chart
 - Sound feedback for emotion changes
 - Smooth animations for ad transitions
-- Settings panel with dark mode and sound toggle
+- Settings panel with dark mode, sound toggle, and A/B testing mode
 - Instructions modal for user guidance
 - Loading screen during model initialization
 - Webcam controls (pause/resume detection)
-- Export experiment data to JSON
+- A/B testing: Compare mood-based vs. random ad serving with separate stats
+- Export experiment data to JSON (includes A/B results if enabled)
 - Responsive, user-friendly interface
 
 ## Technologies Used

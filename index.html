@@ -45,7 +45,8 @@
                 <span class="close">&times;</span>
                 <h3>Settings</h3>
                 <label><input type="checkbox" id="sound-toggle" checked> Enable Sound Feedback</label><br>
-                <label><input type="checkbox" id="dark-mode-toggle"> Dark Mode</label>
+                <label><input type="checkbox" id="dark-mode-toggle"> Dark Mode</label><br>
+                <label><input type="checkbox" id="ab-test-toggle"> A/B Testing Mode</label>
             </div>
         </div>
 
@@ -73,6 +74,11 @@
             <p>Total Views: <span id="views">0</span></p>
             <p>Clicks: <span id="clicks">0</span></p>
             <p>Click Rate: <span id="rate">0%</span></p>
+            <div id="ab-stats" style="display:none;">
+                <h4>A/B Testing Results</h4>
+                <p>Mood-Based: <span id="mood-views">0</span> views, <span id="mood-clicks">0</span> clicks (<span id="mood-rate">0%</span>)</p>
+                <p>Random: <span id="random-views">0</span> views, <span id="random-clicks">0</span> clicks (<span id="random-rate">0%</span>)</p>
+            </div>
             <button id="export-btn">Export Data</button>
             <canvas id="stats-chart"></canvas>
         </div>
